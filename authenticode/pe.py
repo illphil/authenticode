@@ -133,6 +133,6 @@ class PEAuthenticode(object):
         fd.seek(size, 1) # SEEK_CUR
 
         # 7(ii). Get the rest.
-        for data in iter(partial(fd.read, 0x10240), ''):
+        for data in iter(partial(fd.read, 0x100000), ''):
             yield data
 
