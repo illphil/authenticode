@@ -68,7 +68,7 @@ class PEAuthenticode(object):
     def get_signers(self):
         if self._verified is None:
             raise Exception("PKCS#7 data not loaded")
-        self._auth.get_signers()
+        return self._auth.get_signers()
 
     def get_certs(self):
         if self._verified is None:
