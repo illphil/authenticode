@@ -32,7 +32,7 @@ class PEAuthenticode(object):
         with open(filename, 'rb') as fd:
             fd.seek(file_offset)
             data = fd.read(size)
-            pkcs7_der = data[8:]
+            self._pkcs7_der = pkcs7_der = data[8:]
             self.verify_digest(pkcs7_der)
 
             digest = {
@@ -49,9 +49,6 @@ class PEAuthenticode(object):
             digestmatch = self._auth.digest == digest.digest()
             return digestmatch and self.is_digest_verified()
         return False
-
-    def carve_pkcs7(self, filename):
-        pass
 
     def verify_digest(self, pkcs7_der):
         if not self._auth.load_pkcs7_der(pkcs7_der):
@@ -82,6 +79,9 @@ class PEAuthenticode(object):
         if self._verified is None:
             raise Exception("PKCS#7 data not loaded")
         return self._verified
+
+    def get_pkcs7_der(self):
+        return self._pkcs7_der
 
     def _pe_hash_input(self, pe, fd, stop_at_signature=False):
         offset = pe.OPTIONAL_HEADER.get_file_offset()
