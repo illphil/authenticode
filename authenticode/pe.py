@@ -19,6 +19,7 @@ class PEAuthenticode(object):
         self._verify_errors = None
         self._pe_calced_digest = None
         self._pe_expected_digest = None
+        self._pkcs7_der = None
 
     def verify_pe(self, filename, stop_at_signature=False):
         pe = pefile.PE(filename)
