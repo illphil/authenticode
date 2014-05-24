@@ -30,7 +30,7 @@ class PEAuthenticode(object):
         CertificateTable = pe.OPTIONAL_HEADER.DATA_DIRECTORY[index]
         self.file_offset = CertificateTable.VirtualAddress
         self.size = CertificateTable.Size
-        if not file_offset or not size:
+        if not self.file_offset or not self.size:
             return None
 
         with open(filename, 'rb') as fd:
