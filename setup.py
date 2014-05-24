@@ -13,6 +13,7 @@ setup(
     description='PE Authenticode verification package',
     name='authenticode',
     author='illphil',
+    packages=['authenticode'],
     cmdclass = {'build_ext': build_ext},
     ext_modules = [Extension(
         "authenticode._authenticode",
