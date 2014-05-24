@@ -26,16 +26,14 @@ class PEAuthenticode(object):
             pe = pefile.PE(filename, fast_load=True)
         index = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_SECURITY']
         CertificateTable = pe.OPTIONAL_HEADER.DATA_DIRECTORY[index]
-        file_offset = CertificateTable.VirtualAddress
-        size = CertificateTable.Size
+        self.file_offset = CertificateTable.VirtualAddress
+        self.size = CertificateTable.Size
         if not file_offset or not size:
             return None
-        self.file_offset = file_offset
-        self.size = self.size
 
         with open(filename, 'rb') as fd:
-            fd.seek(file_offset)
-            data = fd.read(size)
+            fd.seek(self.file_offset)
+            data = fd.read(self.size)
             self._pkcs7_der = pkcs7_der = data[8:]
             self.verify_digest(pkcs7_der)
 
