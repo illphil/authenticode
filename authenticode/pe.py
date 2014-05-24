@@ -21,11 +21,9 @@ class PEAuthenticode(object):
         self._pe_expected_digest = None
         self._pkcs7_der = None
 
-    def verify_file(self, filename, **kwargs):
-        pe = pefile.PE(filename, fast_load=True)
-        return self.verify_pe(filename, **kwargs)
 
-    def verify_pe(self, pe, stop_at_signature=False):
+    def verify_pe(self, filename, stop_at_signature=False):
+        self.pe = pe = pefile.PE(filename, fast_load=True)
         index = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_SECURITY']
         CertificateTable = pe.OPTIONAL_HEADER.DATA_DIRECTORY[index]
         self.file_offset = CertificateTable.VirtualAddress
