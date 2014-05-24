@@ -22,13 +22,16 @@ class PEAuthenticode(object):
         self._pkcs7_der = None
 
     def verify_pe(self, filename, stop_at_signature=False):
-        pe = pefile.PE(filename)
+        if not isinstance(filename, pefile.PE):
+            pe = pefile.PE(filename, fast_load=True)
         index = pefile.DIRECTORY_ENTRY['IMAGE_DIRECTORY_ENTRY_SECURITY']
         CertificateTable = pe.OPTIONAL_HEADER.DATA_DIRECTORY[index]
         file_offset = CertificateTable.VirtualAddress
         size = CertificateTable.Size
         if not file_offset or not size:
             return None
+        self.file_offset = file_offset
+        self.size = self.size
 
         with open(filename, 'rb') as fd:
             fd.seek(file_offset)
