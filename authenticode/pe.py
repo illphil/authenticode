@@ -4,6 +4,7 @@ It is based on code from osslsigncode.c,v 1.6
 http://sourceforge.net/projects/osslsigncode/
 by Per Allansson <pallansson@gmail.com>
 """
+import os
 import _authenticode
 import pefile
 import hashlib
@@ -30,10 +31,18 @@ class PEAuthenticode(object):
         self.size = CertificateTable.Size
         if not self.file_offset or not self.size:
             return None
+        if pe.get_overlay_data_start_offset() is None:
+            raise Exception("This module currently only handles signatures past EOF.")
 
         with open(filename, 'rb') as fd:
             fd.seek(self.file_offset)
             data = fd.read(self.size)
+            length, sig = unpack("<II", data[:8])
+            if sig != 0x020200:
+                raise Exception("Security entry points to invalid authenticode signature.")
+            if len(data) < self.size or len(data) < length:
+                raise Exception("Authenticode signature truncated")
+
             self._pkcs7_der = pkcs7_der = data[8:]
             self.verify_digest(pkcs7_der)
 
